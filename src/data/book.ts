@@ -2,9 +2,8 @@ import cover from '../assets/covers/libro-limpieza-rima-con-riqueza.png';
 
 /**
  * Datos del libro. Todo el contenido del libro se edita aquí.
- * ⚠️ La portada actual es una maqueta provisional con la identidad de marca.
- *    Reemplaza el archivo src/assets/covers/libro-limpieza-rima-con-riqueza.png
- *    por la portada oficial (misma ruta y nombre) y listo.
+ * Portada oficial: src/assets/covers/libro-limpieza-rima-con-riqueza.png
+ * (para mejor nitidez, reemplazar por una versión de ≥ 800 px de ancho con el mismo nombre).
  */
 export const book = {
   slug: 'limpieza-rima-con-riqueza',

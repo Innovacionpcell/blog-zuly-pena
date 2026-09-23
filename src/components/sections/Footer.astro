@@ -35,6 +35,10 @@ const year = new Date().getFullYear();
   </div>
   <div class="container footer__bottom">
     <p>© <span data-year>{year}</span> Zuly Peña. Todos los derechos reservados.</p>
+    <p class="footer__credit">
+      <span aria-hidden="true">©</span> Desarrollado por{" "}
+      <a href="https://growthdigital.marketing/" target="_blank" rel="noopener">Growth Digital<span class="sr-only"> (se abre en una pestaña nueva)</span></a>
+    </p>
   </div>
   <script>
     // Copyright dinámico también en sitios estáticos cacheados
@@ -121,5 +125,20 @@ const year = new Date().getFullYear();
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     font-size: 0.8125rem;
     color: #98a0c4;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 24px;
+  }
+  .footer__credit a {
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .footer__credit a:hover {
+    color: #9fdcff;
+    border-color: #9fdcff;
   }
 </style>
