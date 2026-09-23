@@ -57,7 +57,7 @@ const schema = [
       <h1 class="post__title">{d.title}</h1>
       <p class="post__excerpt">{d.excerpt}</p>
       <div class="post__meta">
-        <Image src={retrato} alt="" width={40} height={40} class="post__avatar" />
+        <Image src={retrato} alt="" width={40} height={40} densities={[1.5, 2, 3]} class="post__avatar" />
         <span><strong>{d.author}</strong></span>
         <span aria-hidden="true">·</span>
         <span class="post__meta-item"><Icon name="calendar" size={15} /><time datetime={d.date.toISOString()}>{formatDate(d.date)}</time></span>

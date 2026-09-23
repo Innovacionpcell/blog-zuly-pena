@@ -7,15 +7,31 @@
   font-family: 'Montserrat';
   font-style: normal;
   font-weight: 300 800;
-  font-display: swap;
+  /* optional: la fuente precargada se usa si llega a tiempo; si no, el fallback con métricas
+     equivalentes se mantiene en esa visita (sin re-render → LCP y CLS óptimos). */
+  font-display: optional;
   src: url('/fonts/montserrat-latin-wght-normal.woff2') format('woff2');
 }
+
+/* Fallback con métricas ajustadas a Montserrat → sin salto de diseño (CLS) al cargar la fuente.
+   Valores calculados con fontTools sobre montserrat-latin-wght-normal.woff2 vs Arial/Liberation Sans. */
 @font-face {
-  font-family: 'Montserrat';
-  font-style: italic;
-  font-weight: 300 800;
-  font-display: swap;
-  src: url('/fonts/montserrat-latin-wght-italic.woff2') format('woff2');
+  font-family: 'Montserrat Fallback';
+  font-weight: 100 599;
+  src: local('Arial'), local('ArialMT'), local('Liberation Sans'), local('Helvetica'), local('Roboto');
+  size-adjust: 113%;
+  ascent-override: 85.7%;
+  descent-override: 22.2%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Montserrat Fallback';
+  font-weight: 600 900;
+  src: local('Arial Bold'), local('Arial-BoldMT'), local('Liberation Sans Bold'), local('Helvetica Bold'), local('Roboto Bold');
+  size-adjust: 109.7%;
+  ascent-override: 88.2%;
+  descent-override: 22.9%;
+  line-gap-override: 0%;
 }
 
 :root {
@@ -43,7 +59,7 @@
   --grad-brand: linear-gradient(120deg, var(--c-cyan) 0%, var(--c-blue) 45%, var(--c-violet) 100%);
   --grad-soft: linear-gradient(135deg, #eaf6ff 0%, #f4f1ff 100%);
 
-  --font: 'Montserrat', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font: 'Montserrat', 'Montserrat Fallback', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 
   --r-sm: 10px;
   --r-md: 16px;
