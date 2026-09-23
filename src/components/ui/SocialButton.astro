@@ -1,0 +1,125 @@
+---
+import Icon from './Icon.astro';
+import type { Social } from '../../data/socials';
+
+interface Props {
+  social: Social;
+  variant?: 'icon' | 'card';
+  tone?: 'light' | 'dark';
+}
+const { social: s, variant = 'icon', tone = 'light' } = Astro.props;
+const iconName = s.id === 'amazon' ? 'shopping-bag' : s.id;
+---
+{
+  variant === 'icon' ? (
+    <a
+      href={s.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      class:list={['sbtn', `sbtn--${tone}`]}
+      aria-label={`${s.label} de Zuly Peña (se abre en una pestaña nueva)`}
+      title={s.label}
+    >
+      <Icon name={iconName} size={18} />
+    </a>
+  ) : (
+    <a href={s.url} target="_blank" rel="noopener noreferrer" class:list={['scard', `scard--${s.id}`]}>
+      <span class="scard__icon">
+        <Icon name={iconName} size={22} />
+      </span>
+      <span class="scard__text">
+        <span class="scard__label">{s.label}</span>
+        <span class="scard__handle">{s.cta}</span>
+      </span>
+      <Icon name="arrow-up-right" size={18} class="scard__arrow" />
+      <span class="sr-only">(se abre en una pestaña nueva)</span>
+    </a>
+  )
+}
+
+<style>
+  .sbtn {
+    display: inline-grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition:
+      background-color 0.25s var(--ease),
+      color 0.25s var(--ease),
+      transform 0.25s var(--ease);
+  }
+  .sbtn--light {
+    color: var(--c-text-2);
+    background: var(--c-bg-soft);
+  }
+  .sbtn--light:hover {
+    color: #fff;
+    background: var(--c-violet);
+    transform: translateY(-2px);
+  }
+  .sbtn--dark {
+    color: #dfe3f7;
+    background: rgba(255, 255, 255, 0.08);
+  }
+  .sbtn--dark:hover {
+    color: var(--c-navy);
+    background: #fff;
+    transform: translateY(-2px);
+  }
+
+  .scard {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 20px;
+    background: #fff;
+    border: 1px solid var(--c-line);
+    border-radius: var(--r-md);
+    text-decoration: none;
+    box-shadow: var(--shadow-sm);
+    transition:
+      transform 0.3s var(--ease),
+      box-shadow 0.3s var(--ease),
+      border-color 0.3s var(--ease);
+  }
+  .scard:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: #d9d4fb;
+  }
+  .scard__icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    color: #fff;
+    background: var(--grad-brand);
+  }
+  .scard__text {
+    display: grid;
+    min-width: 0;
+  }
+  .scard__label {
+    font-weight: 700;
+    color: var(--c-text);
+  }
+  .scard__handle {
+    font-size: 0.875rem;
+    color: var(--c-text-3);
+  }
+  .scard :global(.scard__arrow) {
+    margin-left: auto;
+    flex: none;
+    color: var(--c-text-3);
+    transition:
+      transform 0.25s var(--ease),
+      color 0.25s var(--ease);
+  }
+  .scard:hover :global(.scard__arrow) {
+    color: var(--c-violet-deep);
+    transform: translate(2px, -2px);
+  }
+</style>

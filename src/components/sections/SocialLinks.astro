@@ -1,0 +1,72 @@
+---
+import SectionTitle from '../ui/SectionTitle.astro';
+import SocialButton from '../ui/SocialButton.astro';
+import Icon from '../ui/Icon.astro';
+import { activeSocials } from '../../data/socials';
+import { SITE } from '../../config/site';
+---
+<section id="contacto" class="section social" aria-labelledby="contacto-title">
+  <div class="container">
+    <SectionTitle
+      id="contacto-title"
+      eyebrow="Contacto"
+      title="Conecta conmigo"
+      subtitle="Sígueme donde prefieras. Allí comparto consejos, historias y novedades de los nuevos recursos."
+    />
+    <ul class="social__grid" role="list">
+      {
+        activeSocials.map((s, i) => (
+          <li class="reveal" style={`--reveal-delay:${i * 60}ms`}>
+            <SocialButton social={s} variant="card" />
+          </li>
+        ))
+      }
+    </ul>
+    {
+      SITE.contactEmail && (
+        <p class="social__mail reveal">
+          <Icon name="mail" size={18} />
+          ¿Colaboraciones o prensa? Escríbeme a <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>
+        </p>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .social {
+    background: var(--c-bg-soft);
+  }
+  .social__grid {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+    max-width: 980px;
+    margin-inline: auto;
+  }
+  .social__grid > li {
+    flex: 1 1 260px;
+    max-width: 310px;
+  }
+  @media (max-width: 599.98px) {
+    .social__grid > li {
+      max-width: none;
+    }
+  }
+  .social__mail {
+    margin-top: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    color: var(--c-text-2);
+  }
+  .social__mail a {
+    color: var(--c-violet-deep);
+    font-weight: 600;
+  }
+</style>

@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FeaturedBook from '../components/sections/FeaturedBook.astro';
+import LiteYouTube from '../components/ui/LiteYouTube.astro';
+import SectionTitle from '../components/ui/SectionTitle.astro';
+import Button from '../components/ui/Button.astro';
+import Newsletter from '../components/sections/Newsletter.astro';
+import { book } from '../data/book';
+import { bookSchema, breadcrumbSchema } from '../lib/schema';
+
+const schema = [
+  bookSchema(book.cover.src),
+  breadcrumbSchema([
+    { name: 'Inicio', url: '/' },
+    { name: 'Libro', url: '/libro/' },
+  ]),
+];
+---
+<BaseLayout
+  title={`${book.title}: ${book.subtitle}`}
+  description={`${book.title}, el libro de Zuly Peña para mujeres que trabajan en limpieza: ${book.subtitle.toLowerCase()}. Disponible en Amazon.`}
+  image={book.cover.src}
+  imageAlt={book.coverAlt}
+  type="book"
+  schema={schema}
+>
+  <FeaturedBook standalone />
+
+  <section class="section" aria-labelledby="video-title">
+    <div class="container video">
+      <SectionTitle
+        id="video-title"
+        eyebrow="Mira el video"
+        title="Para las heroínas de la vida cotidiana"
+        subtitle="Zuly presenta el libro y la idea que lo inspira: tu trabajo tiene un valor que mereces reconocer."
+      />
+      <div class="video__player reveal">
+        <LiteYouTube id={book.youtubeId} title={book.youtubeTitle} />
+      </div>
+      <div class="video__cta reveal">
+        <Button href={book.amazonUrl} external size="lg" icon="arrow-up-right" data-track="amazon-click">
+          Comprar en Amazon
+        </Button>
+      </div>
+    </div>
+  </section>
+
+  <Newsletter />
+</BaseLayout>
+
+<style>
+  .video__player {
+    max-width: 860px;
+    margin-inline: auto;
+  }
+  .video__cta {
+    margin-top: 36px;
+    display: flex;
+    justify-content: center;
+  }
+</style>

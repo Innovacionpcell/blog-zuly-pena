@@ -1,0 +1,33 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import PageHeader from '../components/ui/PageHeader.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  updated: string;
+}
+const { title, description, updated } = Astro.props;
+---
+<BaseLayout title={title} description={description}>
+  <PageHeader title={title} crumbs={[{ label: title }]}>
+    <p class="legal__updated">Última actualización: {updated}</p>
+  </PageHeader>
+  <section class="section" style="padding-top: 16px">
+    <div class="container">
+      <div class="prose legal"><slot /></div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .legal__updated {
+    margin-top: 12px;
+    font-size: 0.875rem;
+    color: var(--c-text-3);
+  }
+  .legal :global(p:last-child) {
+    font-weight: 400;
+    color: inherit;
+  }
+</style>

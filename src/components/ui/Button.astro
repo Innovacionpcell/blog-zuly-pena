@@ -1,0 +1,135 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'secondary' | 'ghost' | 'light';
+  size?: 'md' | 'lg';
+  icon?: string;
+  iconLeft?: string;
+  external?: boolean;
+  type?: 'button' | 'submit';
+  class?: string;
+  ariaLabel?: string;
+  disabled?: boolean;
+  [key: string]: unknown;
+}
+
+const {
+  href,
+  variant = 'primary',
+  size = 'md',
+  icon,
+  iconLeft,
+  external = false,
+  type = 'button',
+  class: className,
+  ariaLabel,
+  disabled = false,
+  ...rest
+} = Astro.props;
+
+const classes = ['btn', `btn--${variant}`, `btn--${size}`, className];
+const ext = external ? { target: '_blank', rel: 'noopener noreferrer' } : {};
+---
+{
+  href && !disabled ? (
+    <a href={href} class:list={classes} aria-label={ariaLabel} {...ext} {...rest}>
+      {iconLeft && <Icon name={iconLeft} size={18} />}
+      <span><slot /></span>
+      {icon && <Icon name={icon} size={18} class="btn__icon" />}
+      {external && <span class="sr-only">(se abre en una pestaña nueva)</span>}
+    </a>
+  ) : (
+    <button type={type} class:list={classes} aria-label={ariaLabel} disabled={disabled} {...rest}>
+      {iconLeft && <Icon name={iconLeft} size={18} />}
+      <span><slot /></span>
+      {icon && <Icon name={icon} size={18} class="btn__icon" />}
+    </button>
+  )
+}
+
+<style>
+  .btn {
+    --btn-h: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: var(--btn-h);
+    padding: 0 22px;
+    border-radius: 999px;
+    border: 1.5px solid transparent;
+    font-size: 0.9375rem;
+    font-weight: 650;
+    letter-spacing: 0.005em;
+    line-height: 1.2;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    transition:
+      transform 0.25s var(--ease),
+      box-shadow 0.25s var(--ease),
+      background-color 0.25s var(--ease),
+      border-color 0.25s var(--ease),
+      color 0.25s var(--ease);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn--lg {
+    --btn-h: 54px;
+    padding: 0 28px;
+    font-size: 1rem;
+  }
+  .btn :global(.btn__icon) {
+    transition: transform 0.25s var(--ease);
+  }
+  .btn:hover :global(.btn__icon) {
+    transform: translateX(3px);
+  }
+
+  .btn--primary {
+    color: #fff;
+    background: linear-gradient(120deg, #2a8fe0 0%, #5a74e2 55%, var(--c-violet) 100%);
+    box-shadow: 0 10px 24px -12px rgba(76, 90, 220, 0.65);
+  }
+  .btn--primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 30px -12px rgba(76, 90, 220, 0.7);
+  }
+
+  .btn--secondary {
+    color: var(--c-navy);
+    background: #fff;
+    border-color: #d8dcec;
+  }
+  .btn--secondary:hover {
+    border-color: var(--c-violet);
+    color: var(--c-violet-deep);
+    transform: translateY(-2px);
+  }
+
+  .btn--ghost {
+    color: var(--c-violet-deep);
+    background: transparent;
+    padding-inline: 4px;
+    min-height: 40px;
+  }
+  .btn--ghost:hover {
+    color: var(--c-navy);
+  }
+
+  .btn--light {
+    color: var(--c-navy);
+    background: #fff;
+    box-shadow: var(--shadow-md);
+  }
+  .btn--light:hover {
+    transform: translateY(-2px);
+  }
+
+  .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+</style>

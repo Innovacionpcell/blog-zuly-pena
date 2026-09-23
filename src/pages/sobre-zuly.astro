@@ -1,0 +1,152 @@
+---
+/**
+ * ⚠️ Página base: ampliar con la historia personal de Zuly (origen, migración, momento de quiebre,
+ * cómo nació el libro). Solo se incluye aquí información ya pública en su marca.
+ */
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/ui/PageHeader.astro';
+import Button from '../components/ui/Button.astro';
+import Icon from '../components/ui/Icon.astro';
+import SocialLinks from '../components/sections/SocialLinks.astro';
+import mentora from '../assets/images/zuly-pena-mentora.jpg';
+import { SITE } from '../config/site';
+import { breadcrumbSchema } from '../lib/schema';
+
+const values = [
+  { icon: 'sparkles', title: 'Autoconocimiento y valor personal', text: 'Todo cambio empieza por mirarte con respeto y reconocer lo que ya sabes hacer.' },
+  { icon: 'sprout', title: 'Fuerza interior y crecimiento', text: 'Crecer no es dejar de ser quien eres, es darte permiso para ser más.' },
+  { icon: 'users', title: 'Apoyo y comunidad', text: 'Nadie debería transformar su vida en soledad. Juntas llegamos más lejos.' },
+  { icon: 'hand-coins', title: 'Prosperidad y libertad económica', text: 'Tu experiencia tiene un precio justo. Aprender a cobrarlo también es crecer.' },
+];
+---
+<BaseLayout
+  title="Sobre Zuly Peña"
+  description={SITE.author.description}
+  type="profile"
+  schema={[breadcrumbSchema([{ name: 'Inicio', url: '/' }, { name: 'Sobre Zuly', url: '/sobre-zuly/' }])]}
+>
+  <PageHeader eyebrow="Mi historia" title="Soy Zuly Peña" crumbs={[{ label: 'Sobre Zuly' }]} />
+
+  <section class="section story" style="padding-top: 16px">
+    <div class="container story__grid">
+      <div class="story__media reveal">
+        <Image src={mentora} alt="Zuly Peña, mentora de mujeres" widths={[360, 560, 753]} sizes="(min-width: 900px) 460px, 92vw" loading="eager" />
+      </div>
+      <div class="story__copy prose">
+        <p class="story__lead">
+          Mentora, autora y creadora de contenido para mujeres que trabajan en limpieza y desean transformar su profesión, su
+          mentalidad y su relación con el dinero.
+        </p>
+        <p>
+          Mi mensaje es sencillo: <strong>trabajar en la limpieza no te hace menos.</strong> Detrás de cada casa impecable
+          hay una mujer con talento, disciplina y una historia que merece respeto.
+        </p>
+        <p>
+          Acompaño a mujeres, muchas de ellas migrantes, a dejar de vivir en modo supervivencia: a reconocer su valor,
+          poner límites, cuidar su bienestar y dar pasos concretos hacia la estabilidad económica.
+        </p>
+        <p>
+          De ese propósito nació mi libro <a href="/libro/">Limpieza rima con riqueza</a>, escrito para las heroínas de la
+          vida cotidiana.
+        </p>
+        <blockquote>Tu trabajo no te define, tus decisiones sí.</blockquote>
+        <div class="story__ctas">
+          <Button href="/libro/" iconLeft="book-open">Conoce mi libro</Button>
+          <Button href="/recursos/" variant="secondary" icon="arrow-right">Ver recursos</Button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section values" aria-labelledby="values-title">
+    <div class="container">
+      <h2 id="values-title" class="values__title reveal">Lo que guía mi trabajo</h2>
+      <ul class="values__grid" role="list">
+        {
+          values.map((v, i) => (
+            <li class="values__item reveal" style={`--reveal-delay:${i * 80}ms`}>
+              <span class="values__icon">
+                <Icon name={v.icon} size={22} />
+              </span>
+              <h3>{v.title}</h3>
+              <p>{v.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <SocialLinks />
+</BaseLayout>
+
+<style>
+  .story__grid {
+    display: grid;
+    gap: clamp(36px, 6vw, 72px);
+    align-items: start;
+  }
+  @media (min-width: 900px) {
+    .story__grid {
+      grid-template-columns: 0.85fr 1fr;
+    }
+  }
+  .story__media :global(img) {
+    width: 100%;
+    border-radius: var(--r-xl);
+    box-shadow: var(--shadow-lg);
+    aspect-ratio: 4 / 3.4;
+    object-fit: cover;
+  }
+  .story__lead {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--c-text);
+  }
+  .story__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-top: 8px;
+  }
+  .values__title {
+    font-size: clamp(1.7rem, 3.8vw, 2.4rem);
+    color: var(--c-navy);
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .values__grid {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 18px;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  }
+  .values__item {
+    padding: 26px;
+    border-radius: var(--r-lg);
+    background: #fff;
+    border: 1px solid var(--c-line);
+    box-shadow: var(--shadow-sm);
+  }
+  .values__item h3 {
+    margin-top: 16px;
+    font-size: 1.08rem;
+    color: var(--c-text);
+  }
+  .values__item p {
+    margin-top: 8px;
+    font-size: 0.95rem;
+    color: var(--c-text-2);
+  }
+  .values__icon {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    background: var(--grad-brand);
+    color: #fff;
+  }
+</style>

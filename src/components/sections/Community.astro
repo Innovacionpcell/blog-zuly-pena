@@ -1,0 +1,68 @@
+---
+import Button from '../ui/Button.astro';
+import { Image } from 'astro:assets';
+import isoBlanco from '../../assets/brand/isotipo-blanco.png';
+---
+<section class="community" aria-labelledby="community-title">
+  <div class="container">
+    <div class="community__card reveal">
+      <Image src={isoBlanco} alt="" width={400} height={325} class="community__mark" loading="lazy" />
+      <p class="community__eyebrow">Propósito</p>
+      <h2 id="community-title" class="community__title">No tienes que limitarte a sobrevivir</h2>
+      <p class="community__text">
+        Tu trabajo tiene valor. Tu experiencia tiene valor. Y construir una vida diferente empieza cuando tú también reconoces
+        ese valor.
+      </p>
+      <Button href="#recursos" variant="light" size="lg" icon="arrow-right">Descubre los recursos</Button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .community {
+    padding-block: clamp(24px, 4vw, 40px) var(--section-y);
+  }
+  .community__card {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: 18px;
+    padding: clamp(48px, 8vw, 96px) clamp(22px, 6vw, 80px);
+    border-radius: var(--r-xl);
+    color: #fff;
+    background:
+      radial-gradient(60% 80% at 100% 0%, rgba(124, 107, 224, 0.55) 0%, transparent 60%),
+      radial-gradient(60% 90% at 0% 100%, rgba(41, 182, 246, 0.35) 0%, transparent 60%),
+      linear-gradient(135deg, #1b2a66 0%, #26307a 50%, #3a2f86 100%);
+    box-shadow: var(--shadow-lg);
+  }
+  .community :global(.community__mark) {
+    position: absolute;
+    right: -60px;
+    bottom: -70px;
+    width: clamp(220px, 34vw, 420px);
+    opacity: 0.07;
+    z-index: -1;
+  }
+  .community__eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #a9dcff;
+  }
+  .community__title {
+    font-size: clamp(1.9rem, 4.8vw, 3.1rem);
+    max-width: 18ch;
+    letter-spacing: -0.03em;
+  }
+  .community__text {
+    font-size: clamp(1.03rem, 1.8vw, 1.2rem);
+    color: #dbe0f7;
+    max-width: 56ch;
+    margin-bottom: 10px;
+  }
+</style>

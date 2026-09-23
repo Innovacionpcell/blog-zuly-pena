@@ -1,0 +1,219 @@
+---
+import { Image } from 'astro:assets';
+import Button from '../ui/Button.astro';
+import Icon from '../ui/Icon.astro';
+import { book } from '../../data/book';
+
+interface Props {
+  /** En /libro se oculta el botón "Conocer más" y se usa h1 */
+  standalone?: boolean;
+}
+const { standalone = false } = Astro.props;
+const H = standalone ? 'h1' : 'h2';
+---
+<section id="libro" class="section fbook" aria-labelledby="libro-title">
+  <div class="fbook__bg" aria-hidden="true"></div>
+  <div class="container fbook__grid">
+    <div class="fbook__cover reveal">
+      <div class="fbook__book">
+        <Image
+          src={book.cover}
+          alt={book.coverAlt}
+          widths={[280, 420, 560, 800]}
+          sizes="(min-width: 1024px) 380px, (min-width: 640px) 320px, 64vw"
+          loading={standalone ? 'eager' : 'lazy'}
+          fetchpriority={standalone ? 'high' : undefined}
+          class="fbook__img"
+        />
+      </div>
+    </div>
+
+    <div class="fbook__copy">
+      <p class="eyebrow reveal">El libro</p>
+      <H id="libro-title" class="fbook__title reveal">{book.title}</H>
+      <p class="fbook__subtitle reveal">{book.subtitle}</p>
+      {book.description.map((p) => <p class="fbook__text reveal">{p}</p>)}
+
+      <ul class="fbook__highlights reveal">
+        {
+          book.highlights.map((h) => (
+            <li>
+              <span class="fbook__check">
+                <Icon name="check" size={16} />
+              </span>
+              <span>
+                <strong>{h.title}.</strong> {h.text}
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="fbook__ctas reveal">
+        <Button href={book.amazonUrl} external size="lg" icon="arrow-up-right" data-track="amazon-click">
+          Comprar en Amazon
+        </Button>
+        {
+          !standalone && (
+            <Button href="/libro/" variant="secondary" size="lg">
+              Conocer más
+            </Button>
+          )
+        }
+      </div>
+      <p class="fbook__formats reveal">
+        <Icon name="shield-check" size={16} /> Compra segura en Amazon · {book.formats.join(' y ')}
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .fbook {
+    position: relative;
+    overflow: hidden;
+  }
+  .fbook__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(50% 70% at 15% 50%, #e7e3ff 0%, transparent 70%),
+      radial-gradient(40% 60% at 95% 10%, #e3f3ff 0%, transparent 70%),
+      #fbfbff;
+  }
+  .fbook__grid {
+    display: grid;
+    gap: clamp(44px, 6vw, 88px);
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .fbook__grid {
+      grid-template-columns: 0.8fr 1fr;
+    }
+  }
+  .fbook__cover {
+    display: grid;
+    place-items: center;
+    perspective: 1400px;
+  }
+  .fbook__book {
+    position: relative;
+    width: min(64vw, 380px);
+    transform: rotateY(-14deg) rotateX(2deg);
+    transform-style: preserve-3d;
+    transition: transform 0.7s var(--ease);
+  }
+  .fbook__book:hover {
+    transform: rotateY(-4deg);
+  }
+  .fbook__book::before {
+    /* lomo */
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 14px;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.25), rgba(255, 255, 255, 0.18) 60%, transparent);
+    z-index: 2;
+    border-radius: 4px 0 0 4px;
+  }
+  .fbook__book::after {
+    content: '';
+    position: absolute;
+    left: 6%;
+    right: 2%;
+    bottom: -26px;
+    height: 36px;
+    background: radial-gradient(closest-side, rgba(40, 30, 120, 0.35), transparent);
+    filter: blur(6px);
+    z-index: -1;
+  }
+  .fbook__book :global(.fbook__img) {
+    width: 100%;
+    border-radius: 4px 10px 10px 4px;
+    box-shadow:
+      0 40px 70px -30px rgba(40, 30, 120, 0.6),
+      0 12px 24px -12px rgba(40, 30, 120, 0.45);
+  }
+  .fbook__copy {
+    display: grid;
+    gap: 16px;
+    justify-items: start;
+  }
+  .fbook__title {
+    font-size: clamp(2.1rem, 5vw, 3.2rem);
+    color: var(--c-navy);
+    letter-spacing: -0.03em;
+  }
+  .fbook__subtitle {
+    font-size: clamp(1.08rem, 1.9vw, 1.3rem);
+    font-weight: 600;
+    font-style: italic;
+    color: var(--c-violet-deep);
+    margin-top: -4px;
+  }
+  .fbook__text {
+    color: var(--c-text-2);
+    max-width: 60ch;
+  }
+  .fbook__highlights {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+    margin-block: 8px;
+  }
+  @media (min-width: 640px) {
+    .fbook__highlights {
+      grid-template-columns: 1fr 1fr;
+      gap: 14px 22px;
+    }
+  }
+  .fbook__highlights li {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 0.95rem;
+    color: var(--c-text-2);
+  }
+  .fbook__highlights strong {
+    color: var(--c-text);
+  }
+  .fbook__check {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--grad-brand);
+    color: #fff;
+    margin-top: 1px;
+  }
+  .fbook__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  @media (max-width: 479.98px) {
+    .fbook__ctas,
+    .fbook__ctas :global(.btn) {
+      width: 100%;
+    }
+  }
+  .fbook__formats {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8125rem;
+    color: var(--c-text-3);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .fbook__book {
+      transform: none;
+    }
+  }
+</style>

@@ -1,0 +1,42 @@
+---
+/** ⚠️ Texto base. Revisar con asesoría legal según el país de residencia de Zuly y de su audiencia (GDPR/LPD si aplica). */
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { SITE } from '../config/site';
+---
+<LegalLayout
+  title="Política de privacidad"
+  description="Cómo se tratan los datos personales en el sitio web de Zuly Peña."
+  updated="septiembre de 2026"
+>
+  <p>
+    En este sitio respetamos tu privacidad. Esta política explica qué datos se recogen, para qué se usan y qué derechos
+    tienes.
+  </p>
+  <h2>Responsable</h2>
+  <p>Zuly Peña, titular de este sitio web{SITE.contactEmail && <>. Contacto: <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a></>}.</p>
+  <h2>Datos que recogemos</h2>
+  <ul>
+    <li><strong>Newsletter:</strong> nombre y correo electrónico, solo si decides suscribirte.</li>
+    <li><strong>Datos técnicos:</strong> información básica de navegación que el servidor registra de forma automática (por ejemplo, dirección IP y tipo de navegador) con fines de seguridad.</li>
+  </ul>
+  <h2>Finalidad</h2>
+  <p>
+    Usamos tu nombre y correo únicamente para enviarte recursos, novedades y contenido relacionado con los temas de este
+    sitio. No vendemos ni cedemos tus datos a terceros.
+  </p>
+  <h2>Proveedores</h2>
+  <p>
+    Para enviar correos podemos apoyarnos en un proveedor de email marketing, que actúa como encargado del tratamiento. Los
+    enlaces a Amazon, YouTube y redes sociales te llevan a sitios de terceros con sus propias políticas de privacidad.
+  </p>
+  <h2>Tus derechos</h2>
+  <p>
+    Puedes darte de baja en cualquier momento desde el enlace incluido en cada correo, y solicitar el acceso, la corrección
+    o la eliminación de tus datos escribiéndonos.
+  </p>
+  <h2>Cookies</h2>
+  <p>
+    Este sitio no utiliza cookies de publicidad. Si en el futuro se incorporan herramientas de analítica, se actualizará
+    esta política.
+  </p>
+</LegalLayout>

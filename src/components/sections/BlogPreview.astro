@@ -1,0 +1,42 @@
+---
+import SectionTitle from '../ui/SectionTitle.astro';
+import BlogCard from '../ui/BlogCard.astro';
+import Button from '../ui/Button.astro';
+import { BLOG, getFeaturedPosts } from '../../data/blog';
+
+const posts = await getFeaturedPosts(BLOG.postsPerHome);
+---
+<section id="blog" class="section blogp" aria-labelledby="blog-title">
+  <div class="container">
+    <SectionTitle
+      id="blog-title"
+      eyebrow="Blog"
+      title={BLOG.title}
+      subtitle="Reflexiones prácticas para crecer en lo personal y en lo profesional, a tu ritmo."
+    />
+    <ul class="grid-cards blogp__list" role="list">
+      {
+        posts.map((post, i) => (
+          <li class="reveal" style={`--reveal-delay:${i * 90}ms`}>
+            <BlogCard post={post} />
+          </li>
+        ))
+      }
+    </ul>
+    <div class="blogp__more reveal">
+      <Button href="/blog/" variant="secondary" icon="arrow-right">Ver todos los artículos</Button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .blogp__list {
+    list-style: none;
+    padding: 0;
+  }
+  .blogp__more {
+    margin-top: 44px;
+    display: flex;
+    justify-content: center;
+  }
+</style>

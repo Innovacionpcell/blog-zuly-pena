@@ -1,0 +1,163 @@
+---
+import { Image } from 'astro:assets';
+import foto from '../../assets/images/zuly-pena-sonrisa.jpg';
+import Button from '../ui/Button.astro';
+import Icon from '../ui/Icon.astro';
+
+const pillars = [
+  { icon: 'sparkles', title: 'Autoconocimiento', text: 'Reconocer tu valor personal.' },
+  { icon: 'sprout', title: 'Fuerza interior', text: 'Crecer desde lo que ya eres.' },
+  { icon: 'users', title: 'Comunidad', text: 'Apoyo entre mujeres que se entienden.' },
+  { icon: 'hand-coins', title: 'Prosperidad', text: 'Camino hacia la libertad económica.' },
+];
+---
+<section id="sobre-zuly" class="section about" aria-labelledby="about-title">
+  <div class="container about__grid">
+    <div class="about__media reveal">
+      <Image
+        src={foto}
+        alt="Zuly Peña sonriendo en un espacio luminoso"
+        widths={[360, 540, 720]}
+        sizes="(min-width: 1024px) 460px, 90vw"
+        loading="lazy"
+        class="about__img"
+      />
+      <div class="about__tag"><Icon name="heart" size={16} />Mentora · Autora · Creadora</div>
+    </div>
+
+    <div class="about__copy">
+      <p class="eyebrow reveal">Sobre Zuly</p>
+      <h2 id="about-title" class="about__title reveal">Soy Zuly Peña</h2>
+      <p class="about__lead reveal">
+        Mentora, autora y creadora de contenido para mujeres que trabajan en limpieza y desean transformar su profesión, su
+        mentalidad y su relación con el dinero.
+      </p>
+      <p class="about__text reveal">
+        Acompaño a mujeres, muchas de ellas migrantes, a mirar su oficio con orgullo, poner límites, cuidar su bienestar y
+        convertir su experiencia en crecimiento. Porque trabajar en la limpieza no te hace menos.
+      </p>
+      <ul class="about__pillars reveal">
+        {
+          pillars.map((p) => (
+            <li>
+              <span class="about__pillar-icon">
+                <Icon name={p.icon} size={18} />
+              </span>
+              <span>
+                <strong>{p.title}</strong>
+                {p.text}
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="reveal">
+        <Button href="/sobre-zuly/" variant="secondary" icon="arrow-right">Conoce mi historia</Button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about {
+    background: var(--c-bg-soft);
+  }
+  .about__grid {
+    display: grid;
+    gap: clamp(40px, 6vw, 80px);
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .about__grid {
+      grid-template-columns: 0.85fr 1fr;
+    }
+  }
+  .about__media {
+    position: relative;
+    max-width: 460px;
+    width: 100%;
+    margin-inline: auto;
+  }
+  .about__media :global(.about__img) {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: 50% 30%;
+    border-radius: var(--r-xl);
+    box-shadow: var(--shadow-lg);
+  }
+  .about__tag {
+    position: absolute;
+    left: 50%;
+    bottom: -18px;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    padding: 10px 18px;
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: var(--shadow-md);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--c-navy);
+  }
+  .about__tag :global(svg) {
+    color: var(--c-violet);
+  }
+  .about__copy {
+    display: grid;
+    gap: 18px;
+    justify-items: start;
+  }
+  .about__title {
+    font-size: clamp(2rem, 4.4vw, 2.9rem);
+    color: var(--c-navy);
+  }
+  .about__lead {
+    font-size: clamp(1.08rem, 1.8vw, 1.25rem);
+    font-weight: 550;
+    color: var(--c-text);
+    line-height: 1.55;
+  }
+  .about__text {
+    color: var(--c-text-2);
+  }
+  .about__pillars {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 14px;
+    width: 100%;
+    margin-block: 8px 10px;
+  }
+  @media (min-width: 560px) {
+    .about__pillars {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .about__pillars li {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 0.9rem;
+    color: var(--c-text-2);
+  }
+  .about__pillars strong {
+    display: block;
+    color: var(--c-text);
+    font-size: 0.95rem;
+  }
+  .about__pillar-icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: #fff;
+    color: var(--c-violet-deep);
+    box-shadow: var(--shadow-sm);
+  }
+</style>

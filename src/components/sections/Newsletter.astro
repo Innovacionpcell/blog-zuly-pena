@@ -1,0 +1,201 @@
+---
+import Button from '../ui/Button.astro';
+import Icon from '../ui/Icon.astro';
+---
+<section id="newsletter" class="section news" aria-labelledby="news-title">
+  <div class="container">
+    <div class="news__card reveal">
+      <div class="news__copy">
+        <span class="news__icon"><Icon name="mail" size={22} /></span>
+        <h2 id="news-title" class="news__title">Recibe nuevos recursos</h2>
+        <p class="news__text">Consejos, guías y herramientas directamente en tu correo.</p>
+      </div>
+
+      <form class="news__form" data-newsletter novalidate>
+        <div class="field">
+          <label for="nl-name">Nombre</label>
+          <input id="nl-name" name="name" type="text" autocomplete="given-name" required minlength="2" placeholder="Tu nombre" />
+        </div>
+        <div class="field">
+          <label for="nl-email">Correo electrónico</label>
+          <input id="nl-email" name="email" type="email" autocomplete="email" inputmode="email" required placeholder="tucorreo@ejemplo.com" />
+        </div>
+        <!-- honeypot anti-spam -->
+        <div class="hp" aria-hidden="true">
+          <label for="nl-web">No llenar</label>
+          <input id="nl-web" name="website" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+        <Button type="submit" size="lg" icon="arrow-right" class="news__submit">Quiero recibirlos</Button>
+        <p class="news__legal">
+          Sin spam. Puedes darte de baja cuando quieras. Lee la <a href="/privacidad/">política de privacidad</a>.
+        </p>
+        <p class="news__status" role="status" aria-live="polite" data-status></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { subscribe } from '../../lib/newsletter';
+
+  document.querySelectorAll<HTMLFormElement>('[data-newsletter]').forEach((form) => {
+    const status = form.querySelector<HTMLElement>('[data-status]')!;
+    const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      status.className = 'news__status';
+      const data = new FormData(form);
+      if (String(data.get('website') ?? '')) return; // bot
+
+      const name = String(data.get('name') ?? '').trim();
+      const email = String(data.get('email') ?? '').trim();
+      const nameInput = form.elements.namedItem('name') as HTMLInputElement;
+      const emailInput = form.elements.namedItem('email') as HTMLInputElement;
+      nameInput.removeAttribute('aria-invalid');
+      emailInput.removeAttribute('aria-invalid');
+
+      if (name.length < 2) {
+        nameInput.setAttribute('aria-invalid', 'true');
+        status.textContent = 'Escribe tu nombre, por favor.';
+        status.classList.add('is-error');
+        nameInput.focus();
+        return;
+      }
+      if (!emailInput.checkValidity()) {
+        emailInput.setAttribute('aria-invalid', 'true');
+        status.textContent = 'Revisa tu correo electrónico.';
+        status.classList.add('is-error');
+        emailInput.focus();
+        return;
+      }
+
+      submit.disabled = true;
+      status.textContent = 'Enviando…';
+      const res = await subscribe({ name, email });
+      submit.disabled = false;
+
+      if (res.ok) {
+        form.reset();
+        status.textContent = `¡Gracias, ${name}! Te avisaremos cuando haya nuevos recursos.`;
+        status.classList.add('is-ok');
+      } else {
+        status.textContent = res.error;
+        status.classList.add('is-error');
+      }
+    });
+  });
+</script>
+
+<style>
+  .news__card {
+    display: grid;
+    gap: clamp(28px, 4vw, 56px);
+    align-items: center;
+    padding: clamp(32px, 6vw, 64px);
+    border-radius: var(--r-xl);
+    background: var(--grad-soft);
+    border: 1px solid #e3e6f7;
+  }
+  @media (min-width: 900px) {
+    .news__card {
+      grid-template-columns: 0.9fr 1.1fr;
+    }
+  }
+  .news__copy {
+    display: grid;
+    gap: 12px;
+    justify-items: start;
+  }
+  .news__icon {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    background: #fff;
+    color: var(--c-violet-deep);
+    box-shadow: var(--shadow-sm);
+  }
+  .news__title {
+    font-size: clamp(1.75rem, 3.8vw, 2.4rem);
+    color: var(--c-navy);
+  }
+  .news__text {
+    color: var(--c-text-2);
+    font-size: 1.0625rem;
+  }
+  .news__form {
+    display: grid;
+    gap: 14px;
+  }
+  @media (min-width: 560px) {
+    .news__form {
+      grid-template-columns: 1fr 1fr;
+    }
+    .news__form :global(.news__submit),
+    .news__legal,
+    .news__status {
+      grid-column: 1 / -1;
+    }
+  }
+  .field {
+    display: grid;
+    gap: 6px;
+  }
+  .field label {
+    font-size: 0.8125rem;
+    font-weight: 650;
+    color: var(--c-text);
+  }
+  .field input {
+    height: 52px;
+    padding: 0 16px;
+    border-radius: var(--r-md);
+    border: 1.5px solid #d9ddee;
+    background: #fff;
+    font-size: 1rem;
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s;
+  }
+  .field input::placeholder {
+    color: #8e95b2;
+  }
+  .field input:focus {
+    outline: none;
+    border-color: var(--c-violet);
+    box-shadow: 0 0 0 4px rgba(124, 107, 224, 0.18);
+  }
+  .field input[aria-invalid='true'] {
+    border-color: #c2413b;
+  }
+  .hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .news__legal {
+    font-size: 0.8125rem;
+    color: var(--c-text-3);
+  }
+  .news__legal a {
+    color: var(--c-violet-deep);
+  }
+  .news__status {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    min-height: 1.4em;
+  }
+  .news__status:empty {
+    display: none;
+  }
+  .news__status.is-ok {
+    color: #0f6b4a;
+  }
+  .news__status.is-error {
+    color: #b3261e;
+  }
+</style>

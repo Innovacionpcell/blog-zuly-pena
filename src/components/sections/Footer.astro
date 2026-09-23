@@ -1,0 +1,125 @@
+---
+import { Image } from 'astro:assets';
+import isoBlanco from '../../assets/brand/isotipo-blanco.png';
+import SocialButton from '../ui/SocialButton.astro';
+import { footerNav } from '../../data/navigation';
+import { activeSocials } from '../../data/socials';
+import { SITE } from '../../config/site';
+
+const year = new Date().getFullYear();
+---
+<footer class="footer">
+  <div class="container footer__grid">
+    <div class="footer__brand">
+      <a href="/" class="footer__logo" aria-label="Zuly Peña, ir al inicio">
+        <Image src={isoBlanco} alt="" width={48} height={39} loading="lazy" />
+        <span>Zuly Peña</span>
+      </a>
+      <p class="footer__tagline">{SITE.tagline}</p>
+      <p class="footer__desc">Crecimiento personal y profesional para mujeres que trabajan en limpieza.</p>
+    </div>
+
+    <nav aria-label="Pie de página" class="footer__nav">
+      <p class="footer__h">Explora</p>
+      <ul>
+        {footerNav.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="footer__social">
+      <p class="footer__h">Sígueme</p>
+      <ul class="footer__icons" role="list">
+        {activeSocials.map((s) => <li><SocialButton social={s} tone="dark" /></li>)}
+      </ul>
+    </div>
+  </div>
+  <div class="container footer__bottom">
+    <p>© <span data-year>{year}</span> Zuly Peña. Todos los derechos reservados.</p>
+  </div>
+  <script>
+    // Copyright dinámico también en sitios estáticos cacheados
+    document.querySelectorAll('[data-year]').forEach((el) => (el.textContent = String(new Date().getFullYear())));
+  </script>
+</footer>
+
+<style>
+  .footer {
+    background: var(--c-navy);
+    color: #c9cfe8;
+    padding-top: clamp(56px, 8vw, 88px);
+  }
+  .footer__grid {
+    display: grid;
+    gap: 40px;
+  }
+  @media (min-width: 768px) {
+    .footer__grid {
+      grid-template-columns: 1.4fr 1fr 1fr;
+    }
+  }
+  .footer__logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+  .footer__logo :global(img) {
+    width: 44px;
+    height: auto;
+  }
+  .footer__tagline {
+    margin-top: 14px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #9fdcff;
+  }
+  .footer__desc {
+    margin-top: 10px;
+    max-width: 36ch;
+    font-size: 0.9375rem;
+  }
+  .footer__h {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 14px;
+  }
+  .footer__nav ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 6px;
+  }
+  .footer__nav a {
+    display: inline-block;
+    padding: 4px 0;
+    text-decoration: none;
+    font-size: 0.9375rem;
+    color: #c9cfe8;
+    transition: color 0.2s;
+  }
+  .footer__nav a:hover {
+    color: #fff;
+  }
+  .footer__icons {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .footer__bottom {
+    margin-top: 48px;
+    padding-block: 22px 28px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.8125rem;
+    color: #98a0c4;
+  }
+</style>

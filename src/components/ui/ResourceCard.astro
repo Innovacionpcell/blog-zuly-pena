@@ -1,0 +1,195 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import type { Resource } from '../../data/resources';
+
+interface Props {
+  resource: Resource;
+  headingLevel?: 'h3' | 'h2';
+}
+const { resource: r, headingLevel: H = 'h3' } = Astro.props;
+const available = r.href.trim() !== '';
+const isExternal = r.external ?? /^https?:\/\//.test(r.href);
+const ctaIcon = r.type === 'Guía' || r.type === 'PDF' ? 'download' : isExternal ? 'arrow-up-right' : 'arrow-right';
+const badges = available ? (r.badges ?? []) : [...(r.badges ?? []).filter((b) => b !== 'Nuevo'), 'Próximamente'];
+---
+<article class:list={['rcard', { 'rcard--portrait': r.portrait }]}>
+  <div class="rcard__media">
+    <Image
+      src={r.image}
+      alt={r.imageAlt}
+      widths={[360, 560, 760]}
+      sizes="(min-width: 1100px) 360px, (min-width: 700px) 45vw, 92vw"
+      loading="lazy"
+      decoding="async"
+      class="rcard__img"
+    />
+    <div class="rcard__badges">
+      <span class="badge badge--type">{r.type}</span>
+      {badges.map((b) => <span class:list={['badge', `badge--${b.toLowerCase().replace(/[^a-z]/g, '')}`]}>{b}</span>)}
+    </div>
+  </div>
+  <div class="rcard__body">
+    <p class="rcard__cat">{r.category}</p>
+    <H class="rcard__title">
+      {
+        available ? (
+          <a href={r.href} class="rcard__link" {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+            {r.title}
+          </a>
+        ) : (
+          r.title
+        )
+      }
+    </H>
+    <p class="rcard__desc">{r.description}</p>
+    <span class:list={['rcard__cta', { 'is-disabled': !available }]} aria-hidden={available ? 'true' : undefined}>
+      {available ? r.cta : 'Disponible muy pronto'}
+      {available && <Icon name={ctaIcon} size={18} />}
+    </span>
+  </div>
+</article>
+
+<style>
+  .rcard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid var(--c-line);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition:
+      transform 0.35s var(--ease),
+      box-shadow 0.35s var(--ease),
+      border-color 0.35s var(--ease);
+    height: 100%;
+  }
+  .rcard:hover,
+  .rcard:focus-within {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: #d9d4fb;
+  }
+  .rcard__media {
+    position: relative;
+    aspect-ratio: 3 / 2;
+    background: var(--grad-soft);
+    overflow: hidden;
+  }
+  .rcard__media :global(.rcard__img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s var(--ease);
+  }
+  .rcard--portrait .rcard__media :global(.rcard__img) {
+    position: absolute;
+    top: 26px;
+    left: 0;
+    right: 0;
+    margin-inline: auto;
+    width: auto;
+    height: calc(100% + 8px);
+    object-fit: contain;
+    border-radius: 3px 8px 8px 3px;
+    box-shadow: 0 22px 40px -16px rgba(40, 40, 120, 0.55);
+  }
+  .rcard:hover .rcard__media :global(.rcard__img) {
+    transform: scale(1.03);
+  }
+  .rcard__badges {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .badge {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--c-navy);
+    backdrop-filter: blur(6px);
+    box-shadow: var(--shadow-sm);
+  }
+  .badge--type {
+    background: var(--c-navy);
+    color: #fff;
+  }
+  .badge--gratis {
+    color: #0f6b4a;
+    background: #e3f7ee;
+  }
+  .badge--nuevo {
+    color: var(--c-violet-deep);
+    background: #efecff;
+  }
+  .badge--destacado {
+    color: #1d4f91;
+    background: #e3f1ff;
+  }
+  .badge--prximamente {
+    color: #6b5d3f;
+    background: #f6f1e7;
+  }
+  .rcard__body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 22px 24px 24px;
+    flex: 1;
+  }
+  .rcard__cat {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--c-violet-deep);
+  }
+  .rcard__title {
+    font-size: 1.2rem;
+    line-height: 1.3;
+    color: var(--c-text);
+  }
+  .rcard__link {
+    text-decoration: none;
+  }
+  /* Toda la card es clicable, con un único enlace accesible */
+  .rcard__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+  .rcard__desc {
+    color: var(--c-text-2);
+    font-size: 0.95rem;
+  }
+  .rcard__cta {
+    margin-top: auto;
+    padding-top: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 0.9375rem;
+    color: var(--c-violet-deep);
+  }
+  .rcard__cta :global(svg) {
+    transition: transform 0.25s var(--ease);
+  }
+  .rcard:hover .rcard__cta :global(svg) {
+    transform: translateX(3px);
+  }
+  .rcard__cta.is-disabled {
+    color: var(--c-text-3);
+    font-weight: 600;
+  }
+</style>

@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/sections/Hero.astro';
+import About from '../components/sections/About.astro';
+import Resources from '../components/sections/Resources.astro';
+import FeaturedBook from '../components/sections/FeaturedBook.astro';
+import BlogPreview from '../components/sections/BlogPreview.astro';
+import Community from '../components/sections/Community.astro';
+import SocialLinks from '../components/sections/SocialLinks.astro';
+import Newsletter from '../components/sections/Newsletter.astro';
+import { book } from '../data/book';
+import { bookSchema, blogSchema } from '../lib/schema';
+import { getPublishedPosts } from '../data/blog';
+
+const posts = await getPublishedPosts();
+const schema = [
+  bookSchema(book.cover.src),
+  blogSchema(posts.map((p) => ({ url: `/blog/${p.id}/`, title: p.data.title, date: p.data.date }))),
+];
+---
+<BaseLayout schema={schema}>
+  <Hero />
+  <About />
+  <Resources />
+  <FeaturedBook />
+  <BlogPreview />
+  <Community />
+  <SocialLinks />
+  <Newsletter />
+</BaseLayout>

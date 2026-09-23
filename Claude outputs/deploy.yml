@@ -1,0 +1,55 @@
+# Build + despliegue a Hostinger por FTP en cada push a main.
+# Configura en GitHub → Settings → Secrets and variables → Actions:
+#   FTP_SERVER    (ej. ftp.zulypena.com o la IP que muestra hPanel)
+#   FTP_USERNAME
+#   FTP_PASSWORD
+# Mientras los secrets no existan, el job de deploy se omite y solo se valida el build.
+name: Build & Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          include-hidden-files: true
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      HAS_FTP: ${{ secrets.FTP_SERVER != '' }}
+    steps:
+      - name: Omitir si no hay credenciales
+        if: env.HAS_FTP != 'true'
+        run: echo "FTP_SERVER no configurado; deploy omitido."
+      - uses: actions/download-artifact@v4
+        if: env.HAS_FTP == 'true'
+        with:
+          name: dist
+          path: dist
+      - name: Subir a Hostinger (public_html)
+        if: env.HAS_FTP == 'true'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./dist/
+          server-dir: ./public_html/
+          dangerous-clean-slate: false

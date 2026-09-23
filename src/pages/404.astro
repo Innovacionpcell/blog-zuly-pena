@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/ui/Button.astro';
+---
+<BaseLayout title="Página no encontrada" description="La página que buscas no existe o cambió de dirección." noindex>
+  <section class="section nf">
+    <div class="container nf__inner">
+      <p class="eyebrow">Error 404</p>
+      <h1>Esta página no existe</h1>
+      <p>Puede que el enlace haya cambiado. Te dejamos algunos caminos para seguir.</p>
+      <div class="nf__ctas">
+        <Button href="/" icon="arrow-right">Ir al inicio</Button>
+        <Button href="/blog/" variant="secondary">Leer el blog</Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf__inner {
+    text-align: center;
+    display: grid;
+    justify-items: center;
+    gap: 16px;
+    min-height: 45vh;
+    align-content: center;
+  }
+  h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--c-navy);
+  }
+  p:not(.eyebrow) {
+    color: var(--c-text-2);
+  }
+  .nf__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 8px;
+  }
+</style>

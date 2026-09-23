@@ -1,0 +1,52 @@
+---
+import SectionTitle from '../ui/SectionTitle.astro';
+import ResourceCard from '../ui/ResourceCard.astro';
+import Button from '../ui/Button.astro';
+import { featuredResources, resources as allResources, type Resource } from '../../data/resources';
+
+interface Props {
+  items?: Resource[];
+  showAllLink?: boolean;
+}
+const { items = featuredResources, showAllLink = allResources.length > featuredResources.length } = Astro.props;
+---
+<section id="recursos" class="section resources" aria-labelledby="recursos-title">
+  <div class="container">
+    <SectionTitle
+      id="recursos-title"
+      eyebrow="Recursos"
+      title="Recursos para crecer"
+      subtitle="Libros, guías y herramientas creadas para acompañarte en tu crecimiento personal y profesional."
+    />
+    <ul class="grid-cards resources__list" role="list">
+      {
+        items.map((r, i) => (
+          <li class="reveal" style={`--reveal-delay:${i * 90}ms`}>
+            <ResourceCard resource={r} />
+          </li>
+        ))
+      }
+    </ul>
+    {
+      showAllLink && (
+        <div class="resources__more reveal">
+          <Button href="/recursos/" variant="secondary" icon="arrow-right">
+            Ver todos los recursos
+          </Button>
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .resources__list {
+    list-style: none;
+    padding: 0;
+  }
+  .resources__more {
+    margin-top: 44px;
+    display: flex;
+    justify-content: center;
+  }
+</style>

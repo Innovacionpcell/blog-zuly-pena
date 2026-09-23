@@ -1,0 +1,235 @@
+---
+import { render } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogCard from '../../components/ui/BlogCard.astro';
+import Button from '../../components/ui/Button.astro';
+import Icon from '../../components/ui/Icon.astro';
+import retrato from '../../assets/images/zuly-pena-retrato.jpg';
+import { formatDate, getPublishedPosts, readingTime, type Post } from '../../data/blog';
+import { book } from '../../data/book';
+import { articleSchema, breadcrumbSchema } from '../../lib/schema';
+
+export async function getStaticPaths() {
+  const posts = await getPublishedPosts();
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post, posts } }));
+}
+
+interface Props {
+  post: Post;
+  posts: Post[];
+}
+const { post, posts } = Astro.props;
+const { Content } = await render(post);
+const d = post.data;
+const url = `/blog/${post.id}/`;
+const minutes = readingTime(post.body);
+const related = posts.filter((p) => p.id !== post.id).slice(0, 3);
+const schema = [
+  articleSchema({ url, title: d.title, description: d.description, image: d.cover.src, date: d.date, updated: d.updated }),
+  breadcrumbSchema([
+    { name: 'Inicio', url: '/' },
+    { name: 'Blog', url: '/blog/' },
+    { name: d.title, url },
+  ]),
+];
+---
+<BaseLayout
+  title={d.title}
+  description={d.description}
+  image={d.cover.src}
+  imageAlt={d.coverAlt}
+  type="article"
+  publishedTime={d.date}
+  modifiedTime={d.updated}
+  schema={schema}
+>
+  <article class="post">
+    <header class="post__head container">
+      <nav aria-label="Ruta de navegación" class="post__crumbs">
+        <ol>
+          <li><a href="/">Inicio</a></li>
+          <li><a href="/blog/">Blog</a></li>
+          <li><span aria-current="page">{d.category}</span></li>
+        </ol>
+      </nav>
+      <p class="eyebrow">{d.category}</p>
+      <h1 class="post__title">{d.title}</h1>
+      <p class="post__excerpt">{d.excerpt}</p>
+      <div class="post__meta">
+        <Image src={retrato} alt="" width={40} height={40} class="post__avatar" />
+        <span><strong>{d.author}</strong></span>
+        <span aria-hidden="true">·</span>
+        <span class="post__meta-item"><Icon name="calendar" size={15} /><time datetime={d.date.toISOString()}>{formatDate(d.date)}</time></span>
+        <span aria-hidden="true">·</span>
+        <span class="post__meta-item"><Icon name="clock" size={15} />{minutes} min de lectura</span>
+      </div>
+    </header>
+
+    <div class="container post__cover">
+      <Image
+        src={d.cover}
+        alt={d.coverAlt}
+        widths={[480, 800, 1200]}
+        sizes="(min-width: 960px) 900px, 100vw"
+        loading="eager"
+        fetchpriority="high"
+      />
+    </div>
+
+    <div class="container post__body">
+      <div class="prose">
+        <Content />
+      </div>
+
+      <aside class="post__book" aria-label="Libro recomendado">
+        <Image src={book.cover} alt={book.coverAlt} widths={[120, 240]} sizes="120px" class="post__book-img" loading="lazy" />
+        <div>
+          <p class="eyebrow">Del mismo tema</p>
+          <p class="post__book-title">{book.title}</p>
+          <p class="post__book-text">{book.subtitle}. Un libro para reconocer tu valor y dejar de vivir en modo supervivencia.</p>
+          <div class="post__book-ctas">
+            <Button href={book.amazonUrl} external icon="arrow-up-right" data-track="amazon-click">Comprar en Amazon</Button>
+            <Button href="/libro/" variant="ghost" icon="arrow-right">Conocer más</Button>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </article>
+
+  {
+    related.length > 0 && (
+      <section class="section related" aria-labelledby="related-title">
+        <div class="container">
+          <h2 id="related-title" class="related__title">Sigue leyendo</h2>
+          <ul class="grid-cards" role="list" style="list-style:none;padding:0">
+            {related.map((p) => (
+              <li>
+                <BlogCard post={p} />
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .post__head {
+    max-width: calc(820px + var(--gutter) * 2);
+    padding-top: clamp(32px, 6vw, 64px);
+    text-align: left;
+  }
+  .post__crumbs ol {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 0.8125rem;
+    color: var(--c-text-3);
+    margin-bottom: 22px;
+  }
+  .post__crumbs li + li::before {
+    content: '/';
+    margin-right: 6px;
+    color: #b7bdd6;
+  }
+  .post__crumbs a {
+    text-decoration: none;
+  }
+  .post__title {
+    margin-top: 12px;
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--c-navy);
+    letter-spacing: -0.03em;
+  }
+  .post__excerpt {
+    margin-top: 16px;
+    font-size: clamp(1.05rem, 1.8vw, 1.22rem);
+    color: var(--c-text-2);
+  }
+  .post__meta {
+    margin-top: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 10px;
+    font-size: 0.875rem;
+    color: var(--c-text-3);
+  }
+  .post__meta strong {
+    color: var(--c-text);
+  }
+  .post__meta :global(.post__avatar) {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+  }
+  .post__meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .post__cover {
+    max-width: calc(960px + var(--gutter) * 2);
+    margin-top: 36px;
+  }
+  .post__cover :global(img) {
+    width: 100%;
+    border-radius: var(--r-xl);
+    box-shadow: var(--shadow-md);
+  }
+  .post__body {
+    max-width: calc(760px + var(--gutter) * 2);
+    padding-block: clamp(36px, 6vw, 64px);
+  }
+  .post__book {
+    margin-top: 56px;
+    display: grid;
+    gap: 22px;
+    align-items: center;
+    padding: 26px;
+    border-radius: var(--r-lg);
+    background: var(--grad-soft);
+    border: 1px solid #e3e6f7;
+  }
+  @media (min-width: 560px) {
+    .post__book {
+      grid-template-columns: 120px 1fr;
+    }
+  }
+  .post__book :global(.post__book-img) {
+    width: 120px;
+    border-radius: 3px 8px 8px 3px;
+    box-shadow: var(--shadow-md);
+  }
+  .post__book-title {
+    margin-top: 6px;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--c-navy);
+  }
+  .post__book-text {
+    margin-top: 6px;
+    color: var(--c-text-2);
+    font-size: 0.95rem;
+  }
+  .post__book-ctas {
+    margin-top: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    align-items: center;
+  }
+  .related {
+    background: var(--c-bg-soft);
+  }
+  .related__title {
+    font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+    color: var(--c-navy);
+    margin-bottom: 32px;
+  }
+</style>

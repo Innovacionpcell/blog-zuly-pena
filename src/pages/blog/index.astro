@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/ui/PageHeader.astro';
+import BlogCard from '../../components/ui/BlogCard.astro';
+import Newsletter from '../../components/sections/Newsletter.astro';
+import { BLOG, getPublishedPosts } from '../../data/blog';
+import { blogSchema, breadcrumbSchema } from '../../lib/schema';
+
+const posts = await getPublishedPosts();
+const schema = [
+  blogSchema(posts.map((p) => ({ url: `/blog/${p.id}/`, title: p.data.title, date: p.data.date }))),
+  breadcrumbSchema([
+    { name: 'Inicio', url: '/' },
+    { name: 'Blog', url: '/blog/' },
+  ]),
+];
+---
+<BaseLayout title="Blog" description={BLOG.description} schema={schema}>
+  <PageHeader eyebrow="Blog" title={BLOG.title} subtitle={BLOG.description} crumbs={[{ label: 'Blog' }]} />
+  <section class="section" style="padding-top: 24px">
+    <div class="container">
+      <ul class="grid-cards" role="list" style="list-style:none;padding:0">
+        {
+          posts.map((post, i) => (
+            <li class="reveal" style={`--reveal-delay:${(i % 3) * 90}ms`}>
+              <BlogCard post={post} headingLevel="h2" eager={i < 3} />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+  <Newsletter />
+</BaseLayout>

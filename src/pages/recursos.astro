@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/ui/PageHeader.astro';
+import ResourceCard from '../components/ui/ResourceCard.astro';
+import Newsletter from '../components/sections/Newsletter.astro';
+import { resources } from '../data/resources';
+import { breadcrumbSchema } from '../lib/schema';
+---
+<BaseLayout
+  title="Recursos para crecer"
+  description="Libros, guías y PDFs de Zuly Peña para acompañar el crecimiento personal y profesional de mujeres que trabajan en limpieza."
+  schema={[breadcrumbSchema([{ name: 'Inicio', url: '/' }, { name: 'Recursos', url: '/recursos/' }])]}
+>
+  <PageHeader
+    eyebrow="Recursos"
+    title="Recursos para crecer"
+    subtitle="Libros, guías y herramientas creadas para acompañarte en tu crecimiento personal y profesional."
+    crumbs={[{ label: 'Recursos' }]}
+  />
+  <section class="section" style="padding-top: 24px">
+    <div class="container">
+      <ul class="grid-cards" role="list" style="list-style:none;padding:0">
+        {
+          resources.map((r, i) => (
+            <li class="reveal" style={`--reveal-delay:${(i % 3) * 90}ms`}>
+              <ResourceCard resource={r} headingLevel="h2" />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+  <Newsletter />
+</BaseLayout>
